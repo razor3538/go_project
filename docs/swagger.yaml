@@ -1,0 +1,314 @@
+definitions:
+  ErrorResponse:
+    properties:
+      code:
+        type: integer
+      error:
+        type: string
+    type: object
+  LoginRequest:
+    properties:
+      password:
+        example: "123"
+        type: string
+      username:
+        example: admin@mail.ru
+        type: string
+    type: object
+  domain.Balance:
+    properties:
+      created-at:
+        type: string
+      current:
+        type: number
+      id:
+        type: string
+      updated-at:
+        type: string
+      user_id:
+        type: string
+      withdrawn:
+        type: number
+    type: object
+  domain.Order:
+    properties:
+      created-at:
+        type: string
+      id:
+        type: string
+      number:
+        type: string
+      updated-at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  domain.Withdrawals:
+    properties:
+      created-at:
+        type: string
+      id:
+        type: string
+      order:
+        type: string
+      sum:
+        type: number
+      updated-at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  swagger.CreateOrder:
+    properties:
+      number:
+        example: "12345678903"
+        type: string
+    required:
+    - number
+    type: object
+  swagger.CreateUser:
+    properties:
+      email:
+        example: admin@mail.ru
+        type: string
+      last_name:
+        example: Gaifutdinov
+        type: string
+      name:
+        example: Eduard
+        type: string
+      password:
+        example: "123"
+        type: string
+    required:
+    - email
+    - last_name
+    - name
+    - password
+    type: object
+  swagger.CreateWithdrawals:
+    properties:
+      order:
+        example: "2377225624"
+        type: string
+      sum:
+        example: 500
+        type: number
+    required:
+    - order
+    - sum
+    type: object
+  swagger.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      name:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  title: Gophermart Service
+  version: 1.0.0
+paths:
+  /api/user/balance:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order
+          schema:
+            items:
+              $ref: '#/definitions/domain.Balance'
+            type: array
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: return error or 200 status code if success
+      tags:
+      - balance
+  /api/user/balance/withdraw:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Order
+        in: body
+        name: payload
+        schema:
+          $ref: '#/definitions/swagger.CreateWithdrawals'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: withdraw
+          schema:
+            $ref: '#/definitions/domain.Withdrawals'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: return error or 200 status code if success
+      tags:
+      - withdraw
+  /api/user/balance/withdrawals:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: withdraw
+          schema:
+            items:
+              $ref: '#/definitions/domain.Withdrawals'
+            type: array
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: return error or 200 status code if success
+      tags:
+      - withdraw
+  /api/user/get-orders:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order
+          schema:
+            items:
+              $ref: '#/definitions/domain.Order'
+            type: array
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: return error or 200 status code if success
+      tags:
+      - order
+  /api/user/is-authenticated:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/swagger.UserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: return user info if authorized
+      tags:
+      - auth
+  /api/user/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Credentials
+        in: body
+        name: payload
+        schema:
+          $ref: '#/definitions/LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/swagger.UserResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Returns info about user
+      tags:
+      - auth
+  /api/user/logout:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "401":
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Removes cookie if set
+      tags:
+      - auth
+  /api/user/orders:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Order
+        in: body
+        name: payload
+        schema:
+          $ref: '#/definitions/swagger.CreateOrder'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Order
+          schema:
+            $ref: '#/definitions/domain.Order'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: return error or 201 status code if success
+      tags:
+      - order
+  /api/user/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User
+        in: body
+        name: payload
+        schema:
+          $ref: '#/definitions/swagger.CreateUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User
+          schema:
+            $ref: '#/definitions/swagger.UserResponse'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: return error or 201 status code if success
+      tags:
+      - user
+swagger: "2.0"
