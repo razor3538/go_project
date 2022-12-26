@@ -1,23 +1,24 @@
 package config
 
 import (
+	migrate "example.com/m/init/db"
 	"fmt"
+	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 // DB is database instance
 var DB *gorm.DB
 
 func init() {
-	db, err := gorm.Open(postgres.Open(Env.BdConnection), &gorm.Config{})
-
+	db, err := gorm.Open("postgres", Env.Address)
 	if err != nil {
 		panic(err)
 	}
 
 	DB = db
+
+	migrate.Migrate()
 
 	fmt.Println("You connected to your database.")
 }

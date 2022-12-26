@@ -1,4 +1,4 @@
-package main
+package migrate
 
 import (
 	"example.com/m/config"
@@ -8,7 +8,7 @@ import (
 	"gopkg.in/gormigrate.v1"
 )
 
-func main() {
+func Migrate() {
 	db := config.DB
 
 	m := gormigrate.New(db, gormigrate.DefaultOptions, []*gormigrate.Migration{
