@@ -12,7 +12,7 @@ import (
 var DB *gorm.DB
 
 func initDb() {
-	db, err := gorm.Open("postgres", Env.Address)
+	db, err := gorm.Open("postgres", Env.BdConnection)
 	if err != nil {
 		os.Exit(4)
 	}
