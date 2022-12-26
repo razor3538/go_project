@@ -1,6 +1,7 @@
 package main
 
 import (
+	"example.com/m/config"
 	_ "example.com/m/docs"
 	"example.com/m/internal/routes"
 )
@@ -9,6 +10,8 @@ import (
 // @version  1.0.0
 // @host     localhost:8000
 func main() {
+	config.CheckFlagEnv()
+
 	r := routes.SetupRouter()
 
 	if err := r.Run(":8000"); err != nil {

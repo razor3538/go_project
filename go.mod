@@ -3,6 +3,7 @@ module example.com/m
 go 1.19
 
 require (
+	github.com/appleboy/gin-jwt/v2 v2.9.1
 	github.com/gin-gonic/gin v1.8.1
 	github.com/gofrs/uuid v4.3.1+incompatible
 	github.com/jinzhu/copier v0.3.5
@@ -17,7 +18,6 @@ require (
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
-	github.com/appleboy/gin-jwt/v2 v2.9.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
