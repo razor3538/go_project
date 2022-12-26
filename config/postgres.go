@@ -18,7 +18,7 @@ func init() {
 
 	DB = db
 
-	migrate.Migrate()
+	migrate.Migrate(db)
 
 	fmt.Println("You connected to your database.")
 }
