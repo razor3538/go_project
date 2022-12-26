@@ -52,11 +52,15 @@ func (u *User) Add(c *gin.Context) {
 	}
 
 	_, err = middleware.Passport().Authenticator(c)
+
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
+		println(err.Error())
+		println(err.Error())
+		println(err.Error())
 		return
 	}
-	
+
 	c.Writer.Header().Set("Authorization", user.ID.String())
 
 	c.JSON(http.StatusOK, userModel)
