@@ -27,7 +27,6 @@ func (wr *WithdrawRepo) Pay(withdrawal domain.Withdrawals) (domain.Withdrawals, 
 	if withdrawal.Sum > balance.Current {
 		return domain.Withdrawals{}, errors.New("сумма для снятия не достаточна")
 	}
-	println(withdrawal.Order)
 
 	if err := config.DB.
 		Create(&withdrawal).

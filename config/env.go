@@ -23,14 +23,12 @@ func CheckFlagEnv() {
 
 	if os.Getenv("RUN_ADDRESS") != "" {
 		address = os.Getenv("RUN_ADDRESS")
-		println(address)
 	} else {
 		address = "localhost:8080"
 	}
 
 	if os.Getenv("ACCRUAL_SYSTEM_ADDRESS") != "" {
 		remoteAPI = os.Getenv("ACCRUAL_SYSTEM_ADDRESS")
-		println(remoteAPI)
 
 	} else {
 		remoteAPI = ""
@@ -38,7 +36,6 @@ func CheckFlagEnv() {
 
 	if os.Getenv("DATABASE_URI") != "" {
 		dbConnection = os.Getenv("DATABASE_URI")
-		println(dbConnection)
 
 	} else {
 		dbConnection = ""
