@@ -2,17 +2,16 @@ package config
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 // DB is database instance
 var DB *gorm.DB
 
 func init() {
-	connectionString, err := gorm.Open(Env.BdConnection)
-
-	db, err := gorm.Open("postgres", connectionString)
+	db, err := gorm.Open(postgres.Open(Env.BdConnection), &gorm.Config{})
 
 	if err != nil {
 		panic(err)
