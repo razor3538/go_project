@@ -38,6 +38,7 @@ func (o *Order) Add(c *gin.Context) {
 	var order domain.Order
 
 	if err := tools.RequestBinderBody(&body, c); err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -53,6 +54,11 @@ func (o *Order) Add(c *gin.Context) {
 	id := jwt.ExtractClaimsFromToken(value)["id"]
 
 	user, err := repository.NewUserRepo().GetByID(id.(string))
+
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
 
 	order.UserID = user.ID
 
@@ -94,6 +100,11 @@ func (o *Order) Get(c *gin.Context) {
 	id := jwt.ExtractClaimsFromToken(value)["id"]
 
 	user, err := repository.NewUserRepo().GetByID(id.(string))
+
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
 
 	orderModel, err := orderService.GetAllByUser(user.ID.String())
 

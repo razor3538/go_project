@@ -38,6 +38,11 @@ func (b *Balance) Get(c *gin.Context) {
 
 	user, err := repository.NewUserRepo().GetByID(id.(string))
 
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
 	orderModel, err := balanceService.Get(user.ID.String())
 
 	if err != nil {

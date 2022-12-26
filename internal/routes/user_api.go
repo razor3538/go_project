@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"errors"
 	"example.com/m/domain"
 	"example.com/m/internal/models"
 	"example.com/m/internal/services"
@@ -41,11 +40,6 @@ func (u *User) Add(c *gin.Context) {
 
 	if err := copier.Copy(&user, &body); err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
-		return
-	}
-
-	if ok := tools.IsEmailValid(user.Email); !ok {
-		tools.CreateError(http.StatusBadRequest, errors.New("не валидная почта"), c)
 		return
 	}
 
