@@ -24,7 +24,7 @@ func CheckFlagEnv() {
 	if os.Getenv("RUN_ADDRESS") != "" {
 		address = os.Getenv("RUN_ADDRESS")
 	} else {
-		address = "localhost:8080"
+		address = "localhost:8000"
 	}
 
 	if os.Getenv("ACCRUAL_SYSTEM_ADDRESS") != "" {
