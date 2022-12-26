@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"os"
 )
 
 // DB is database instance
@@ -13,6 +14,7 @@ var DB *gorm.DB
 func init() {
 	db, err := gorm.Open("postgres", Env.Address)
 	if err != nil {
+		os.Exit(4)
 		panic(err)
 	}
 
