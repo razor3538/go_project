@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"errors"
 	"example.com/m/domain"
 	"example.com/m/internal/models"
 	"example.com/m/internal/services"
+	"example.com/m/middleware"
 	"example.com/m/tools"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
@@ -44,16 +44,24 @@ func (u *User) Add(c *gin.Context) {
 		return
 	}
 
-	if ok := tools.IsEmailValid(user.Email); !ok {
-		tools.CreateError(http.StatusBadRequest, errors.New("не валидная почта"), c)
-		return
-	}
-
 	userModel, err := userService.Add(user)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
-	c.JSON(http.StatusCreated, userModel)
+
+	_, err = middleware.Passport().Authenticator(c)
+
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		println(err.Error())
+		println(err.Error())
+		println(err.Error())
+		return
+	}
+
+	c.Writer.Header().Set("Authorization", user.ID.String())
+
+	c.JSON(http.StatusOK, userModel)
 }

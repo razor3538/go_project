@@ -1,32 +1,68 @@
 package config
 
 import (
+	"flag"
 	"github.com/joho/godotenv"
 	"os"
 )
 
 type env struct {
-	DbHost     string
-	DbPort     string
-	DbUser     string
-	DbPassword string
-	DbName     string
-	Port       string
-	Host       string
+	Address      string
+	RemoteAPI    string
+	BdConnection string
 }
 
-// Env is env project struct
 var Env env
 
-func init() {
-	_ = godotenv.Load(".env.example")
+func CheckFlagEnv() {
+	var address string
+	var remoteAPI string
+	var dbConnection string
+
+	_ = godotenv.Load()
+
+	if os.Getenv("RUN_ADDRESS") != "" {
+		address = os.Getenv("RUN_ADDRESS")
+	} else {
+		address = "localhost:8000"
+	}
+
+	if os.Getenv("ACCRUAL_SYSTEM_ADDRESS") != "" {
+		remoteAPI = os.Getenv("ACCRUAL_SYSTEM_ADDRESS")
+
+	} else {
+		remoteAPI = ""
+	}
+
+	if os.Getenv("DATABASE_URI") != "" {
+		dbConnection = os.Getenv("DATABASE_URI")
+
+	} else {
+		dbConnection = ""
+	}
+
+	var flagAddress = flag.String("a", "", "Server name")
+	var flagRemoteAPI = flag.String("r", "", "Remote api")
+	var flagDSN = flag.String("d", "", "Base dsn connection")
+
+	flag.Parse()
+
+	if *flagAddress != "" {
+		address = *flagAddress
+	}
+
+	if *flagRemoteAPI != "" {
+		remoteAPI = *flagRemoteAPI
+	}
+
+	if *flagDSN != "" {
+
+		dbConnection = *flagDSN
+	}
+
 	Env = env{
-		DbHost:     os.Getenv("DB_HOST"),
-		DbPort:     os.Getenv("DB_PORT"),
-		DbUser:     os.Getenv("DB_USER"),
-		DbPassword: os.Getenv("DB_PASSWORD"),
-		DbName:     os.Getenv("DB_NAME"),
-		Port:       os.Getenv("PORT"),
-		Host:       os.Getenv("HOST"),
+		Address:      address,
+		RemoteAPI:    remoteAPI,
+		BdConnection: dbConnection,
 	}
 }

@@ -53,6 +53,11 @@ func (w *Withdraw) Pay(c *gin.Context) {
 
 	user, err := repository.NewUserRepo().GetByID(id.(string))
 
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
 	order.UserID = user.ID
 	withdrawalsModel, err := withdrawService.Pay(order)
 
@@ -81,6 +86,11 @@ func (w *Withdraw) Get(c *gin.Context) {
 
 	user, err := repository.NewUserRepo().GetByID(id.(string))
 
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+	
 	withdrawalsModel, err := withdrawService.GetAllByUser(user.ID.String())
 
 	if err != nil {
