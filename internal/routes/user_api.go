@@ -4,6 +4,7 @@ import (
 	"example.com/m/domain"
 	"example.com/m/internal/models"
 	"example.com/m/internal/services"
+	"example.com/m/middleware"
 	"example.com/m/tools"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
@@ -49,6 +50,8 @@ func (u *User) Add(c *gin.Context) {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
+
+	middleware.Passport().LoginHandler(c)
 
 	c.Writer.Header().Set("Authorization", user.ID.String())
 
