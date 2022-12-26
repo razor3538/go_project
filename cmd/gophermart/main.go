@@ -11,7 +11,7 @@ import (
 // @host     localhost:8000
 func main() {
 	config.CheckFlagEnv()
-	config.InitDb()
+	config.InitDB()
 
 	r := routes.SetupRouter()
 

@@ -11,7 +11,7 @@ import (
 // DB is database instance
 var DB *gorm.DB
 
-func InitDb() {
+func InitDB() {
 	db, err := gorm.Open("postgres", Env.BdConnection)
 	if err != nil {
 		os.Exit(4)

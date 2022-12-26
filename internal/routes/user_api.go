@@ -49,5 +49,5 @@ func (u *User) Add(c *gin.Context) {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
-	c.JSON(http.StatusCreated, userModel)
+	c.JSON(http.StatusOK, userModel)
 }
