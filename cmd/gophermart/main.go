@@ -14,6 +14,7 @@ func main() {
 
 	r := routes.SetupRouter()
 
+	println(config.Env.Address)
 	if err := r.Run("localhost:8080"); err != nil {
 		panic(err)
 	}
