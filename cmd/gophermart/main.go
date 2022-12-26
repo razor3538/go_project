@@ -14,7 +14,6 @@ func main() {
 
 	r := routes.SetupRouter()
 
-	println(config.Env.Address)
 	if err := r.Run(config.Env.Address); err != nil {
 		panic(err)
 	}

@@ -11,11 +11,10 @@ import (
 // DB is database instance
 var DB *gorm.DB
 
-func init() {
+func initDb() {
 	db, err := gorm.Open("postgres", Env.Address)
 	if err != nil {
 		os.Exit(4)
-		panic(err)
 	}
 
 	DB = db
