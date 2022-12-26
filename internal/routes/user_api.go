@@ -49,5 +49,8 @@ func (u *User) Add(c *gin.Context) {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
+
+	c.Writer.Header().Set("Authorization", user.ID.String())
+
 	c.JSON(http.StatusOK, userModel)
 }
