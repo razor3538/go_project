@@ -27,7 +27,7 @@ func SetupRouter() *gin.Engine {
 	authRequired.Use(middleware.JwtAuthMiddleware())
 	{
 		authRequired.POST("/api/user/orders", order.Add)
-		authRequired.GET("/api/user/get-orders", order.Get)
+		authRequired.GET("/api/user/orders", order.Get)
 		authRequired.GET("/api/user/balance", balance.Get)
 		authRequired.POST("/api/user/balance/withdraw", withdraw.Pay)
 		authRequired.GET("/api/user/balance/withdrawals", withdraw.Get)

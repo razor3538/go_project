@@ -92,7 +92,7 @@ func (o *Order) Add(c *gin.Context) {
 // @Tags     order
 // @Success  200      {object}  []domain.Order
 // @Failure  400      {object}  models.Error
-// @Router   /api/user/get-orders [get]
+// @Router   /api/user/orders [get]
 func (o *Order) Get(c *gin.Context) {
 	token, _ := c.Cookie("jwt")
 
