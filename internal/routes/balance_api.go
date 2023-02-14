@@ -26,8 +26,8 @@ var balanceService = services.NewBalanceService()
 // @Produce  json
 // @Accept   json
 // @Tags     balance
-// @Success  200      {object}  []domain.Balance  false    "Order"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Success  200      {object}  []domain.Balance
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/balance [get]
 func (b *Balance) Get(c *gin.Context) {
 	token, _ := c.Cookie("jwt")

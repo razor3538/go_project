@@ -19,14 +19,13 @@ func NewAuth() *Auth {
 var authService = services.NewAuthService()
 
 // IsAuthenticated check if user is authorized and
-// if user exists
 // @Summary  return user info if authorized
 // @Produce  json
 // @Accept   json
 // @Tags     auth
 // @Success  200  {object}  swagger.UserResponse
-// @Failure  401  {object}  swagger.Error
-// @Failure  404  {object}  swagger.Error
+// @Failure  401  {object}  models.Error
+// @Failure  404  {object}  models.Error
 // @Router   /api/user/is-authenticated [get]
 func (a Auth) IsAuthenticated(c *gin.Context) {
 	user, code, err := authService.IsAuthenticated(c)
@@ -45,7 +44,7 @@ func (a Auth) IsAuthenticated(c *gin.Context) {
 // @Tags     auth
 // @Param    payload  body      swagger.LoginRequest  false  "User Credentials"
 // @Success  200      {object}  swagger.UserResponse
-// @Failure  401      {object}  swagger.Error  "Error"
+// @Failure  401      {object}  models.Error  "Error"
 // @Router   /api/user/login [post]
 // nolint:deadcode, unused
 func login() {}
@@ -54,8 +53,8 @@ func login() {}
 // @Produce  json
 // @Accept   json
 // @Tags     auth
-// @Success  200  {object}  swagger.Error  "Success"
-// @Failure  401  {object}  swagger.Error  "Error"
+// @Success  200  {object}  models.Error  "Success"
+// @Failure  401  {object}  models.Error  "Error"
 // @Router   /api/user/logout [get]
 // nolint:deadcode, unused
 func logout() {}

@@ -26,9 +26,9 @@ var userService = services.NewUserService()
 // @Produce  json
 // @Accept   json
 // @Tags     user
-// @Param    payload  body      swagger.CreateUser    false  "User"
-// @Success  201      {object}  swagger.UserResponse  false  "User"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Param    body  body      swagger.CreateUser    false  "User"
+// @Success  201      {object}  swagger.UserResponse
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/register [post]
 func (u *User) Add(c *gin.Context) {
 	var body models.CreateUserRequest
@@ -51,8 +51,10 @@ func (u *User) Add(c *gin.Context) {
 		return
 	}
 
-	_, err = tools.GenerateToken(userModel.ID.String())
+	tokenString, err := tools.GenerateToken(userModel.ID.String())
 
+	c.Header("Authorization", tokenString)
+	
 	if err != nil {
 		println(err)
 		tools.CreateError(http.StatusBadRequest, err, c)

@@ -30,8 +30,8 @@ var withdrawService = services.NewWithdrawService()
 // @Accept   json
 // @Tags     withdraw
 // @Param    payload  body      swagger.CreateWithdrawals    false  "Order"
-// @Success  200      {object}  domain.Withdrawals  false    "withdraw"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Success  200      {object}  domain.Withdrawals
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/balance/withdraw [post]
 func (w *Withdraw) Pay(c *gin.Context) {
 	var body models.CreateWithdrawals
@@ -74,8 +74,8 @@ func (w *Withdraw) Pay(c *gin.Context) {
 // @Produce  json
 // @Accept   json
 // @Tags     withdraw
-// @Success  200      {object}  []domain.Withdrawals  false    "withdraw"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Success  200      {object}  []domain.Withdrawals
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/balance/withdrawals [get]
 func (w *Withdraw) Get(c *gin.Context) {
 	token, _ := c.Cookie("jwt")
@@ -90,7 +90,7 @@ func (w *Withdraw) Get(c *gin.Context) {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
-	
+
 	withdrawalsModel, err := withdrawService.GetAllByUser(user.ID.String())
 
 	if err != nil {

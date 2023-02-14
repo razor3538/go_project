@@ -29,9 +29,9 @@ var orderService = services.NewOrderService()
 // @Produce  json
 // @Accept   json
 // @Tags     order
-// @Param    payload  body      swagger.CreateOrder    false  "Order"
-// @Success  201      {object}  domain.Order  false    "Order"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Param body body swagger.CreateOrder false "order"
+// @Success  201      {object}  domain.Order
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/orders [post]
 func (o *Order) Add(c *gin.Context) {
 	var body models.CreateOrderRequest
@@ -89,8 +89,8 @@ func (o *Order) Add(c *gin.Context) {
 // @Produce  json
 // @Accept   json
 // @Tags     order
-// @Success  200      {object}  []domain.Order  false    "Order"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Success  200      {object}  []domain.Order
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/get-orders [get]
 func (o *Order) Get(c *gin.Context) {
 	token, _ := c.Cookie("jwt")
