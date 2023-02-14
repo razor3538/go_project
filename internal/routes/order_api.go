@@ -47,13 +47,14 @@ func (o *Order) Add(c *gin.Context) {
 		return
 	}
 
-	token, _ := c.Cookie("jwt")
+	id, err := tools.ExtractTokenID(c)
 
-	value, _ := middleware.Passport().ParseTokenString(token)
+	if err != nil {
+		tools.CreateError(http.StatusUnauthorized, err, c)
+		return
+	}
 
-	id := jwt.ExtractClaimsFromToken(value)["id"]
-
-	user, err := repository.NewUserRepo().GetByID(id.(string))
+	user, err := repository.NewUserRepo().GetByID(id)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
