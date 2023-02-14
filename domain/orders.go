@@ -8,5 +8,5 @@ type Order struct {
 	Number  string    `gorm:"type:text;unique" json:"number"`
 	UserID  uuid.UUID `gorm:"type:uuid" json:"user_id"`
 	Status  string    `gorm:"type:text" default:"NEW"`
-	Accrual float32   `gorm:"type:float"`
+	Accrual float64   `gorm:"type:float"`
 }

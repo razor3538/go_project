@@ -3,16 +3,17 @@ package tools
 import (
 	"encoding/json"
 	"example.com/m/config"
+	"math"
 	"net/http"
 )
 
 type Order struct {
 	Order   string
 	Status  string
-	Accrual float32
+	Accrual float64
 }
 
-func OrderProcessed(number string) (string, float32, error) {
+func OrderProcessed(number string) (string, float64, error) {
 	var order Order
 
 	url := config.Env.RemoteAPI + "/api/orders/" + number
@@ -37,6 +38,20 @@ func OrderProcessed(number string) (string, float32, error) {
 
 	defer req.Body.Close()
 	println(order.Status)
-	println(order.Accrual)
+	println(Round(order.Accrual, 4))
 	return order.Status, order.Accrual, nil
+}
+
+func Round(x float64, prec int) float64 {
+	var rounder float64
+	pow := math.Pow(10, float64(prec))
+	intermed := x * pow
+	_, frac := math.Modf(intermed)
+	if frac >= 0.5 {
+		rounder = math.Ceil(intermed)
+	} else {
+		rounder = math.Floor(intermed)
+	}
+
+	return rounder / pow
 }
