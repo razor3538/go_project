@@ -1,16 +1,17 @@
 package routes
 
 import (
+	"errors"
 	"example.com/m/domain"
-	"example.com/m/internal/models"
 	"example.com/m/internal/repository"
 	"example.com/m/internal/services"
 	"example.com/m/middleware"
 	"example.com/m/tools"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/copier"
+	"io"
 	"net/http"
+	"strconv"
 )
 
 // Order struct
@@ -34,18 +35,16 @@ var orderService = services.NewOrderService()
 // @Failure  400      {object}  models.Error
 // @Router   /api/user/orders [post]
 func (o *Order) Add(c *gin.Context) {
-	var body models.CreateOrderRequest
 	var order domain.Order
+	var reader = c.Request.Body
 
-	if err := tools.RequestBinderBody(&body, c); err != nil {
+	b, err := io.ReadAll(reader)
+	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
-	if err := copier.Copy(&order, &body); err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
-		return
-	}
+	body := string(b)
 
 	id, err := tools.ExtractTokenID(c)
 
@@ -61,19 +60,20 @@ func (o *Order) Add(c *gin.Context) {
 		return
 	}
 
+	order.Number = body
 	order.UserID = user.ID
 
-	//number, err := strconv.Atoi(order.Number)
-	//if err != nil {
-	//	tools.CreateError(http.StatusBadRequest, errors.New("неверный формат запроса"), c)
-	//	return
-	//}
+	number, err := strconv.Atoi(order.Number)
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, errors.New("неверный формат запроса"), c)
+		return
+	}
 
-	//ok := tools.Valid(number)
-	//if !ok {
-	//	tools.CreateError(422, errors.New("неверный формат номера заказа"), c)
-	//	return
-	//}
+	ok := tools.Valid(number)
+	if !ok {
+		tools.CreateError(422, errors.New("неверный формат номера заказа"), c)
+		return
+	}
 
 	orderModel, err := orderService.Add(order)
 
