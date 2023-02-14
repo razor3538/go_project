@@ -36,5 +36,7 @@ func OrderProcessed(number string) (string, float32, error) {
 	}
 
 	defer req.Body.Close()
+	println(order.Status)
+	println(order.Accrual)
 	return order.Status, order.Accrual, nil
 }
