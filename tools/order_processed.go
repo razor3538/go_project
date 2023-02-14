@@ -12,7 +12,7 @@ type Order struct {
 	Accrual float64
 }
 
-func OrderProcessed(number string) (string, error) {
+func OrderProcessed(number string) (string, float64, error) {
 	var order Order
 
 	url := config.Env.RemoteAPI + "/api/orders/" + number
@@ -20,7 +20,7 @@ func OrderProcessed(number string) (string, error) {
 
 	req, err := http.Get(url)
 	if err != nil {
-		return "", err
+		return "", 0.0, err
 	}
 
 	dec := json.NewDecoder(req.Body)
@@ -29,9 +29,9 @@ func OrderProcessed(number string) (string, error) {
 	err = dec.Decode(&order)
 
 	if err != nil {
-		return "", err
+		return "", 0.0, err
 	}
 
 	defer req.Body.Close()
-	return order.Status, nil
+	return order.Status, order.Accrual, nil
 }
