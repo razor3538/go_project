@@ -82,7 +82,7 @@ func (o *Order) Add(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, orderModel)
+	c.JSON(http.StatusAccepted, orderModel)
 }
 
 // Get return orders
