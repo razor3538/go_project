@@ -15,7 +15,10 @@ type Order struct {
 func OrderProcessed(number string) (string, error) {
 	var order Order
 
-	url := config.Env.RemoteAPI + "//" + "/api/orders/" + number
+	println(config.Env.RemoteAPI)
+	println(config.Env.RemoteAPI)
+	url := config.Env.RemoteAPI + "/api/orders/" + number
+	//url := "http://localhost:8080/api/orders/" + number
 
 	req, err := http.Get(url)
 	if err != nil {

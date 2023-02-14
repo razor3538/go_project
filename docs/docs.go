@@ -115,37 +115,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user/get-orders": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "order"
-                ],
-                "summary": "return error or 200 status code if success",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/domain.Order"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/models.Error"
-                        }
-                    }
-                }
-            }
-        },
         "/api/user/is-authenticated": {
             "get": {
                 "consumes": [
@@ -247,6 +216,35 @@ const docTemplate = `{
             }
         },
         "/api/user/orders": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "return error or 200 status code if success",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Order"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            },
             "post": {
                 "consumes": [
                     "application/json"
@@ -358,6 +356,10 @@ const docTemplate = `{
                 },
                 "number": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "string",
+                    "default": "REGISTERED"
                 },
                 "updated-at": {
                     "type": "string"

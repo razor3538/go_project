@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"errors"
 	"example.com/m/domain"
 	"example.com/m/internal/repository"
 	"example.com/m/internal/services"
@@ -9,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
-	"strconv"
 )
 
 // Order struct
@@ -60,18 +58,19 @@ func (o *Order) Add(c *gin.Context) {
 
 	order.Number = body
 	order.UserID = user.ID
+	order.Status = "NEW"
 
-	number, err := strconv.Atoi(order.Number)
-	if err != nil {
-		tools.CreateError(http.StatusBadRequest, errors.New("неверный формат запроса"), c)
-		return
-	}
-
-	ok := tools.Valid(number)
-	if !ok {
-		tools.CreateError(422, errors.New("неверный формат номера заказа"), c)
-		return
-	}
+	//number, err := strconv.Atoi(order.Number)
+	//if err != nil {
+	//	tools.CreateError(http.StatusBadRequest, errors.New("неверный формат запроса"), c)
+	//	return
+	//}
+	//
+	//ok := tools.Valid(number)
+	//if !ok {
+	//	tools.CreateError(422, errors.New("неверный формат номера заказа"), c)
+	//	return
+	//}
 
 	orderModel, err := orderService.Add(order)
 

@@ -22,6 +22,9 @@ definitions:
         type: string
       number:
         type: string
+      status:
+        default: REGISTERED
+        type: string
       updated-at:
         type: string
       user_id:
@@ -171,26 +174,6 @@ paths:
       summary: return error or 200 status code if success
       tags:
       - withdraw
-  /api/user/get-orders:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/domain.Order'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.Error'
-      summary: return error or 200 status code if success
-      tags:
-      - order
   /api/user/is-authenticated:
     get:
       consumes:
@@ -256,6 +239,25 @@ paths:
       tags:
       - auth
   /api/user/orders:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Order'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: return error or 200 status code if success
+      tags:
+      - order
     post:
       consumes:
       - application/json
