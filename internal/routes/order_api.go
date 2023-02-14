@@ -109,9 +109,9 @@ func (o *Order) Get(c *gin.Context) {
 	orderModel, err := orderService.GetAllByUser(user.ID.String())
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		tools.CreateError(http.StatusNoContent, err, c)
 		return
 	}
 
-	c.JSON(http.StatusCreated, orderModel)
+	c.JSON(http.StatusOK, orderModel)
 }
