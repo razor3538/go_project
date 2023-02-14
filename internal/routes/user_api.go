@@ -51,5 +51,13 @@ func (u *User) Add(c *gin.Context) {
 		return
 	}
 
+	_, err = tools.GenerateToken(userModel.ID.String())
+
+	if err != nil {
+		println(err)
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
 	c.JSON(http.StatusOK, userModel)
 }

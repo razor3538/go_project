@@ -24,7 +24,7 @@ func SetupRouter() *gin.Engine {
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	authRequired := r.Group("/")
-	authRequired.Use(middleware.Passport().MiddlewareFunc())
+	authRequired.Use(middleware.JwtAuthMiddleware())
 	{
 		authRequired.POST("/api/user/orders", order.Add)
 		authRequired.GET("/api/user/get-orders", order.Get)

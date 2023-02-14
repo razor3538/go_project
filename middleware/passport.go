@@ -12,6 +12,18 @@ import (
 	"time"
 )
 
+func JwtAuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		err := tools.TokenValid(c)
+		if err != nil {
+			c.String(http.StatusUnauthorized, "Unauthorized")
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
 // IdentityKeyID is used to tell
 // by what field we will identify user
 const IdentityKeyID = "id"
