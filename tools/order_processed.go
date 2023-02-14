@@ -9,10 +9,10 @@ import (
 type Order struct {
 	Order   string
 	Status  string
-	Accrual float64
+	Accrual float32
 }
 
-func OrderProcessed(number string) (string, float64, error) {
+func OrderProcessed(number string) (string, float32, error) {
 	var order Order
 
 	url := config.Env.RemoteAPI + "/api/orders/" + number
@@ -20,6 +20,7 @@ func OrderProcessed(number string) (string, float64, error) {
 
 	req, err := http.Get(url)
 	if err != nil {
+		println(err.Error())
 		return "", 0.0, err
 	}
 
@@ -29,6 +30,8 @@ func OrderProcessed(number string) (string, float64, error) {
 	err = dec.Decode(&order)
 
 	if err != nil {
+		println(err.Error())
+
 		return "", 0.0, err
 	}
 
