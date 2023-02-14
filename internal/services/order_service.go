@@ -35,13 +35,12 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 
 	for _, order := range orders {
 		orderStatus, accrual, err := tools.OrderProcessed(order.Number)
-		if orderStatus == "PROCESSED" {
-			order.Accrual = accrual
-		}
+
 		if err != nil {
 			return []domain.Order{}, err
 		}
 
+		order.Accrual = accrual
 		order.Status = orderStatus
 		_, err = orderRepo.ChangeStatus(order)
 		if err != nil {

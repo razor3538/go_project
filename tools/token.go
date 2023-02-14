@@ -20,7 +20,6 @@ func GenerateToken(user_id string) (string, error) {
 
 func TokenValid(c *gin.Context) error {
 	tokenString := ExtractToken(c)
-	println(tokenString)
 	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
@@ -60,8 +59,6 @@ func ExtractTokenID(c *gin.Context) (string, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
 		uid := claims["user_id"]
-		println("тут юид")
-		println(uid)
 		return uid.(string), nil
 	}
 	return "", nil
