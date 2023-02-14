@@ -3,6 +3,7 @@ package services
 import (
 	"example.com/m/domain"
 	"example.com/m/internal/repository"
+	"example.com/m/tools"
 )
 
 // OrderService struct
@@ -26,10 +27,24 @@ func (os *OrderService) Add(order domain.Order) (domain.Order, error) {
 }
 
 func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
-	orderModel, err := orderRepo.GetByUser(userID)
+	orders, err := orderRepo.GetByUser(userID)
 
 	if err != nil {
 		return []domain.Order{}, err
 	}
-	return orderModel, nil
+
+	for _, order := range orders {
+		orderStatus, err := tools.OrderProcessed(order.Number)
+		if err != nil {
+			return []domain.Order{}, err
+		}
+
+		order.Status = orderStatus
+		_, err = orderRepo.ChangeStatus(order)
+		if err != nil {
+			return []domain.Order{}, err
+		}
+	}
+
+	return orders, nil
 }

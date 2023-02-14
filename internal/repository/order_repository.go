@@ -23,6 +23,17 @@ func (or *OrderRepo) Add(order domain.Order) (domain.Order, error) {
 	return order, nil
 }
 
+func (or *OrderRepo) ChangeStatus(order domain.Order) (domain.Order, error) {
+	if err := config.DB.
+		Table("orders as o").
+		Where("o.id = ?", order.ID).
+		Update("status", order.Status).
+		Error; err != nil {
+		return domain.Order{}, err
+	}
+	return order, nil
+}
+
 func (or *OrderRepo) GetByUser(userID string) ([]domain.Order, error) {
 	var orders []domain.Order
 	err := config.DB.
