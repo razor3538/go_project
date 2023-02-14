@@ -26,7 +26,7 @@ var userRepo = repository.NewUserRepo()
 // Passport is middleware for user authentication
 func Passport() *jwt.GinJWTMiddleware {
 	authMiddleware, _ := jwt.New(&jwt.GinJWTMiddleware{
-		Realm:          "TastyOffice",
+		Realm:          "YandexPracticum",
 		Key:            []byte(os.Getenv("JWTSECRET")),
 		Timeout:        time.Hour * 4,
 		MaxRefresh:     time.Hour * 24,
