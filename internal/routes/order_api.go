@@ -5,9 +5,7 @@ import (
 	"example.com/m/domain"
 	"example.com/m/internal/repository"
 	"example.com/m/internal/services"
-	"example.com/m/middleware"
 	"example.com/m/tools"
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
@@ -94,13 +92,14 @@ func (o *Order) Add(c *gin.Context) {
 // @Failure  400      {object}  models.Error
 // @Router   /api/user/orders [get]
 func (o *Order) Get(c *gin.Context) {
-	token, _ := c.Cookie("jwt")
+	id, err := tools.ExtractTokenID(c)
 
-	value, _ := middleware.Passport().ParseTokenString(token)
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
 
-	id := jwt.ExtractClaimsFromToken(value)["id"]
-
-	user, err := repository.NewUserRepo().GetByID(id.(string))
+	user, err := repository.NewUserRepo().GetByID(id)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
