@@ -33,17 +33,17 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 		return []domain.Order{}, err
 	}
 
-	for _, order := range orders {
+	for i, order := range orders {
 		orderStatus, accrual, err := tools.OrderProcessed(order.Number)
 
 		if err != nil {
 			return []domain.Order{}, err
 		}
 
-		order.Accrual = accrual
-		order.Status = orderStatus
-		println(order.Accrual)
-		println(order.Accrual)
+		orders[i].Accrual = accrual
+		orders[i].Status = orderStatus
+		println(orders[i].Accrual)
+		println(orders[i].Accrual)
 		println(order.Accrual)
 		_, err = orderRepo.ChangeStatus(order)
 		if err != nil {
