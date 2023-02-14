@@ -9,14 +9,12 @@ import (
 type Order struct {
 	Order   string
 	Status  string
-	Accrual int
+	Accrual float64
 }
 
 func OrderProcessed(number string) (string, error) {
 	var order Order
 
-	println(config.Env.RemoteAPI)
-	println(config.Env.RemoteAPI)
 	url := config.Env.RemoteAPI + "/api/orders/" + number
 	//url := "http://localhost:8080/api/orders/" + number
 
