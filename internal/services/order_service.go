@@ -46,7 +46,7 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 		if err != nil {
 			return []domain.Order{}, err
 		}
-		_, err = balanceRepo.Add(userID, 220.0)
+		_, err = balanceRepo.Add(userID, accrual)
 		if err != nil {
 			return []domain.Order{}, err
 		}

@@ -34,21 +34,21 @@ func (br *BalanceRepo) Add(userId string, current float64) (domain.Balance, erro
 		Where("b.user_id = ?", userId).
 		First(&balance).Error
 
-	if err != nil {
-		balance.Current = current
-		if err := config.DB.
-			Create(&balance).
-			Error; err != nil {
-			return domain.Balance{}, err
-		}
-	} else {
-		balance.Current += current
-		if err := config.DB.
-			Update("current", balance.Current).
-			Error; err != nil {
-			return domain.Balance{}, err
-		}
-	}
+	//if err != nil {
+	//	balance.Current = current
+	//	if err := config.DB.
+	//		Create(&balance).
+	//		Error; err != nil {
+	//		return domain.Balance{}, err
+	//	}
+	//} else {
+	//	balance.Current += current
+	//	if err := config.DB.
+	//		Update("current", balance.Current).
+	//		Error; err != nil {
+	//		return domain.Balance{}, err
+	//	}
+	//}
 
 	return balance, err
 }
