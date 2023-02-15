@@ -14,6 +14,7 @@ var DB *gorm.DB
 func InitDB() {
 	//connectionString := fmt.Sprintf("host=localhost port=5432 user=postgres dbname=tander password=123 sslmode=disable")
 
+	// test
 	db, err := gorm.Open("postgres", Env.BdConnection)
 	//db, err := gorm.Open("postgres", connectionString)
 	if err != nil {
