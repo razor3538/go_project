@@ -43,7 +43,7 @@ func (or *OrderRepo) GetByUser(userID string) ([]domain.Order, error) {
 		Order("created_at desc").
 		Scan(&orders).Error
 	if err != nil {
-		return []domain.Order, err
+		return []domain.Order{}, err
 	}
 	return orders, err
 }
