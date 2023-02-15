@@ -31,21 +31,21 @@ func (b *Balance) Get(c *gin.Context) {
 	id, err := tools.ExtractTokenID(c)
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		tools.CreateError(100, err, c)
 		return
 	}
 
 	user, err := repository.NewUserRepo().GetByID(id)
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		tools.CreateError(101, err, c)
 		return
 	}
 
 	orderModel, err := balanceService.Get(user.ID.String())
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		tools.CreateError(102, err, c)
 		return
 	}
 
