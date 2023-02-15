@@ -18,10 +18,6 @@ func (or *OrderRepo) Add(order domain.Order) (domain.Order, error) {
 	if err := config.DB.
 		Create(&order).
 		Error; err != nil {
-		println("qwe")
-		println("qwe")
-		println("qwe")
-		println("qwe")
 		return domain.Order{}, err
 	}
 	return order, nil

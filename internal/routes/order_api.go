@@ -77,7 +77,7 @@ func (o *Order) Add(c *gin.Context) {
 	orderModel, err := orderService.Add(order)
 
 	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
+		tools.CreateError(http.StatusOK, err, c)
 		return
 	}
 
