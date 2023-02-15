@@ -78,6 +78,13 @@ func (o *Order) Add(c *gin.Context) {
 	orderModel, err := orderService.Add(order)
 
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			print("good")
+			c.Status(http.StatusConflict)
+			return
+		} else {
+			print("bad")
+		}
 		tools.CreateError(http.StatusOK, err, c)
 		return
 	}
@@ -102,14 +109,6 @@ func (o *Order) Get(c *gin.Context) {
 	}
 
 	orderModel, err := orderService.GetAllByUser(id)
-
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		print("good")
-		c.Status(http.StatusOK)
-		return
-	} else {
-		print("bad")
-	}
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)

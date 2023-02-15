@@ -3,6 +3,7 @@ package repository
 import (
 	"example.com/m/config"
 	"example.com/m/domain"
+	"github.com/jinzhu/gorm"
 )
 
 // OrderRepo struct
@@ -15,6 +16,18 @@ func NewOrderRepo() *OrderRepo {
 }
 
 func (or *OrderRepo) Add(order domain.Order) (domain.Order, error) {
+	var orderExist []domain.Order
+	config.DB.
+		Unscoped().
+		Table("orders as o").
+		Where("o.user_id = ?", order.UserID).
+		Order("created_at desc").
+		Scan(&orderExist)
+
+	if len(orderExist) == 0 {
+		return domain.Order{}, gorm.ErrRecordNotFound
+	}
+
 	if err := config.DB.
 		Create(&order).
 		Error; err != nil {
