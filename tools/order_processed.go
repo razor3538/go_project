@@ -5,15 +5,16 @@ import (
 	"example.com/m/config"
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 type Order struct {
 	Order   string
 	Status  string
-	Accrual float32
+	Accrual float64
 }
 
-func OrderProcessed(number string) (string, string, error) {
+func OrderProcessed(number string) (string, float64, error) {
 	var order Order
 
 	url := config.Env.RemoteAPI + "/api/orders/" + number
@@ -22,7 +23,7 @@ func OrderProcessed(number string) (string, string, error) {
 	req, err := http.Get(url)
 	if err != nil {
 		println(err.Error())
-		return "", "0", err
+		return "", 0.0, err
 	}
 
 	dec := json.NewDecoder(req.Body)
@@ -30,17 +31,21 @@ func OrderProcessed(number string) (string, string, error) {
 
 	err = dec.Decode(&order)
 
+	tmp := fmt.Sprintf("%.2f", order.Accrual)
+
+	accrualRes, _ := strconv.ParseFloat(tmp, 64)
+
 	println("order.Accrual")
-	println(order.Accrual)
-	println(order.Accrual)
-	println(order.Accrual)
+	println(accrualRes)
+	println(accrualRes)
+	println(accrualRes)
 	println("order.Accrual")
 
 	if err != nil {
 		println(err.Error())
-		return "", "0", err
+		return "", 0.0, err
 	}
 
 	defer req.Body.Close()
-	return order.Status, fmt.Sprintf("%.2f", order.Accrual), nil
+	return order.Status, accrualRes, nil
 }
