@@ -9,7 +9,7 @@ import (
 type Order struct {
 	Order   string
 	Status  string
-	Accrual float64
+	Accrual int
 }
 
 func OrderProcessed(number string) (string, float64, error) {
@@ -34,6 +34,16 @@ func OrderProcessed(number string) (string, float64, error) {
 
 		return "", 0.0, err
 	}
+
+	println("order.Accrual")
+	println(order.Accrual)
+	println(order.Accrual)
+	println(order.Accrual)
+	println(order.Accrual)
+	println(order.Accrual)
+	println(order.Accrual)
+	println(order.Accrual)
+	println("order.Accrual")
 
 	defer req.Body.Close()
 	return order.Status, order.Accrual, nil

@@ -37,7 +37,7 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 		orderStatus, accrual, err := tools.OrderProcessed(order.Number)
 
 		println("тут сумма")
-		println(accrual)
+		//println(imag(accrual))
 		println(accrual)
 		println(accrual)
 		if err != nil {
