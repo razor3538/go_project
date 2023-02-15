@@ -25,7 +25,7 @@ func (br *BalanceRepo) Get(userID string) (domain.Balance, error) {
 	return balance, err
 }
 
-func (br *BalanceRepo) Add(userId string, current float64) (domain.Balance, error) {
+func (br *BalanceRepo) Add(userId string, current string) (domain.Balance, error) {
 	var balance domain.Balance
 
 	err := config.DB.
