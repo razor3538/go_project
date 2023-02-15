@@ -23,9 +23,6 @@ func (br *BalanceRepo) Get(userID string) (domain.Balance, error) {
 		Where("b.user_id = ?", userID).
 		Scan(&balance).Error
 
-	println("dasdsa")
-	println(userID)
-	println("dasdsa")
 	return balance, err
 }
 
