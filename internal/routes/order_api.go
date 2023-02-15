@@ -7,6 +7,7 @@ import (
 	"example.com/m/internal/services"
 	"example.com/m/tools"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"io"
 	"net/http"
 	"strconv"
@@ -102,8 +103,13 @@ func (o *Order) Get(c *gin.Context) {
 
 	orderModel, err := orderService.GetAllByUser(id)
 
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		c.Status(http.StatusOK)
+
+	}
+
 	if err != nil {
-		tools.CreateError(http.StatusNoContent, err, c)
+		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
