@@ -38,6 +38,7 @@ func (wr *WithdrawRepo) Pay(withdrawal domain.Withdrawals) (domain.Withdrawals, 
 		Table("balances as b").
 		Where("b.user_id = ?", withdrawal.UserID).
 		Update("current", balance.Current-withdrawal.Sum).
+		Update("withdrawal", balance.Withdrawn+withdrawal.Sum).
 		Error; err != nil {
 		return domain.Withdrawals{}, err
 	}
