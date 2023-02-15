@@ -24,3 +24,31 @@ func (br *BalanceRepo) Get(userID string) (domain.Balance, error) {
 
 	return balance, err
 }
+
+func (br *BalanceRepo) Add(userId string, current float64) (domain.Balance, error) {
+	var balance domain.Balance
+
+	err := config.DB.
+		Unscoped().
+		Table("balances as b").
+		Where("b.user_id = ?", userId).
+		First(&balance).Error
+
+	if err != nil {
+		balance.Current = current
+		if err := config.DB.
+			Create(&balance).
+			Error; err != nil {
+			return domain.Balance{}, err
+		}
+	} else {
+		balance.Current += current
+		if err := config.DB.
+			Update("current", balance.Current).
+			Error; err != nil {
+			return domain.Balance{}, err
+		}
+	}
+
+	return balance, err
+}
