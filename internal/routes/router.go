@@ -30,7 +30,7 @@ func SetupRouter() *gin.Engine {
 		authRequired.GET("/api/user/orders", order.Get)
 		authRequired.GET("/api/user/balance", balance.Get)
 		authRequired.POST("/api/user/balance/withdraw", withdraw.Pay)
-		authRequired.GET("/api/user/balance/withdrawals", withdraw.Get)
+		authRequired.GET("/api/user/withdrawals", withdraw.Get)
 	}
 	return r
 }
