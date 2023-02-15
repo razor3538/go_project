@@ -51,5 +51,5 @@ func (br *BalanceRepo) Add(userID string, current float64) (domain.Balance, erro
 		}
 	}
 
-	return balance, err
+	return balance, nil
 }
