@@ -61,7 +61,7 @@ func (w *Withdraw) Pay(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, withdrawalsModel)
+	c.JSON(http.StatusOK, withdrawalsModel)
 }
 
 // Get return withdrawal
@@ -89,5 +89,5 @@ func (w *Withdraw) Get(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, withdrawalsModel)
+	c.JSON(http.StatusOK, withdrawalsModel)
 }
