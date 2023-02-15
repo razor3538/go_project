@@ -100,14 +100,7 @@ func (o *Order) Get(c *gin.Context) {
 		return
 	}
 
-	user, err := repository.NewUserRepo().GetByID(id)
-
-	if err != nil {
-		tools.CreateError(http.StatusBadRequest, err, c)
-		return
-	}
-
-	orderModel, err := orderService.GetAllByUser(user.ID.String())
+	orderModel, err := orderService.GetAllByUser(id)
 
 	if err != nil {
 		tools.CreateError(http.StatusNoContent, err, c)
