@@ -46,5 +46,5 @@ func OrderProcessed(number string) (string, float64, error) {
 	println("order.Accrual")
 
 	defer req.Body.Close()
-	return order.Status, order.Accrual, nil
+	return order.Status, 0, nil
 }
