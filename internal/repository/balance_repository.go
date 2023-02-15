@@ -28,6 +28,10 @@ func (br *BalanceRepo) Get(userID string) (domain.Balance, error) {
 func (br *BalanceRepo) Add(userId string, current float64) (domain.Balance, error) {
 	var balance domain.Balance
 
+	println(userId)
+	println(userId)
+	println(userId)
+	println(userId)
 	err := config.DB.
 		Unscoped().
 		Table("balances as b").

@@ -35,12 +35,6 @@ func OrderProcessed(number string) (string, float64, error) {
 
 	accrualRes, _ := strconv.ParseFloat(tmp, 64)
 
-	println("order.Accrual")
-	println(accrualRes)
-	println(accrualRes)
-	println(accrualRes)
-	println("order.Accrual")
-
 	if err != nil {
 		println(err.Error())
 		return "", 0.0, err
