@@ -36,6 +36,10 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 	for i, order := range orders {
 		orderStatus, accrual, err := tools.OrderProcessed(order.Number)
 
+		println("тут сумма")
+		println(accrual)
+		println(accrual)
+		println(accrual)
 		if err != nil {
 			return []domain.Order{}, err
 		}
