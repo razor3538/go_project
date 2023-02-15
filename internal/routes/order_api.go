@@ -104,8 +104,11 @@ func (o *Order) Get(c *gin.Context) {
 	orderModel, err := orderService.GetAllByUser(id)
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
+		print("good")
 		c.Status(http.StatusOK)
-
+		return
+	} else {
+		print("bad")
 	}
 
 	if err != nil {
