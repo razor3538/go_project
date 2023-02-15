@@ -23,7 +23,7 @@ func (br *BalanceRepo) Get(userID string) (domain.Balance, error) {
 		Scan(&balance).Error
 
 	println("dasdsa")
-	println(err.Error())
+	println(userID)
 	println("dasdsa")
 	return balance, err
 }
