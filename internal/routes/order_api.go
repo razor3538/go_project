@@ -7,7 +7,6 @@ import (
 	"example.com/m/internal/services"
 	"example.com/m/tools"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"io"
 	"net/http"
 	"strconv"
@@ -78,12 +77,10 @@ func (o *Order) Add(c *gin.Context) {
 	orderModel, err := orderService.Add(order)
 
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			print("good")
+		if err.Error() == "заказ уже сформирован другим пользователем" {
 			c.Status(http.StatusConflict)
 			return
 		} else {
-			print("bad")
 		}
 		tools.CreateError(http.StatusOK, err, c)
 		return

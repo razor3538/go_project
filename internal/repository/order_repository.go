@@ -1,9 +1,9 @@
 package repository
 
 import (
+	"errors"
 	"example.com/m/config"
 	"example.com/m/domain"
-	"github.com/jinzhu/gorm"
 )
 
 // OrderRepo struct
@@ -20,12 +20,16 @@ func (or *OrderRepo) Add(order domain.Order) (domain.Order, error) {
 	config.DB.
 		Unscoped().
 		Table("orders as o").
-		Where("o.user_id = ?", order.UserID).
+		Where("o.number = ?", order.Number).
 		Order("created_at desc").
 		Scan(&orderExist)
 
-	if len(orderExist) == 0 {
-		return domain.Order{}, gorm.ErrRecordNotFound
+	if len(orderExist) != 0 {
+		if orderExist[0].UserID == order.UserID {
+			return domain.Order{}, errors.New("заказ уже в обработке")
+		} else {
+			return domain.Order{}, errors.New("заказ уже сформирован другим пользователем")
+		}
 	}
 
 	if err := config.DB.
