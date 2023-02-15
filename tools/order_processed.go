@@ -36,10 +36,9 @@ func OrderProcessed(number string) (string, float64, error) {
 	}
 
 	println("order.Accrual")
-	println(order.Accrual)
-	println(order.Accrual)
-	println(order.Accrual)
-	println(order.Accrual)
+	println(int(order.Accrual))
+	println(int(order.Accrual))
+	println(int(order.Accrual))
 	println(order.Accrual)
 	println(order.Accrual)
 	println(order.Accrual)
