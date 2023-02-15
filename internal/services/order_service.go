@@ -42,9 +42,6 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 
 		orders[i].Accrual = accrual
 		orders[i].Status = orderStatus
-		println(orders[i].Accrual)
-		println(orders[i].Accrual)
-		println(order.Accrual)
 		_, err = orderRepo.ChangeStatus(order)
 		if err != nil {
 			return []domain.Order{}, err
