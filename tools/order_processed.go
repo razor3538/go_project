@@ -9,7 +9,7 @@ import (
 type Order struct {
 	Order   string
 	Status  string
-	Accrual int
+	Accrual float32
 }
 
 func OrderProcessed(number string) (string, float64, error) {
