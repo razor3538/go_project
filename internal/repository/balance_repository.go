@@ -28,15 +28,11 @@ func (br *BalanceRepo) Get(userID string) (domain.Balance, error) {
 func (br *BalanceRepo) Add(userId string, current float64) (domain.Balance, error) {
 	var balance domain.Balance
 
-	println(userId)
-	println(userId)
-	println(userId)
-	println(userId)
-	err := config.DB.
-		Unscoped().
-		Table("balances as b").
-		Where("b.user_id = ?", userId).
-		First(&balance).Error
+	//err := config.DB.
+	//	Unscoped().
+	//	Table("balances as b").
+	//	Where("b.user_id = ?", userId).
+	//	First(&balance).Error
 
 	//if err != nil {
 	//	balance.Current = current
@@ -54,5 +50,5 @@ func (br *BalanceRepo) Add(userId string, current float64) (domain.Balance, erro
 	//	}
 	//}
 
-	return balance, err
+	return balance, nil
 }
