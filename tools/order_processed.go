@@ -3,6 +3,7 @@ package tools
 import (
 	"encoding/json"
 	"example.com/m/config"
+	"fmt"
 	"net/http"
 )
 
@@ -36,10 +37,8 @@ func OrderProcessed(number string) (string, float64, error) {
 	}
 
 	println("order.Accrual")
-	println(int(order.Accrual))
-	println(int(order.Accrual))
-	println(int(order.Accrual))
-	println(order.Accrual)
+	println(fmt.Sprintf("%.4f", order.Accrual))
+	println(fmt.Sprintf("%.4f", order.Accrual))
 	println(order.Accrual)
 	println(order.Accrual)
 	println("order.Accrual")
