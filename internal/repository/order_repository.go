@@ -42,8 +42,8 @@ func (or *OrderRepo) GetByUser(userID string) ([]domain.Order, error) {
 		Where("o.user_id = ?", userID).
 		Order("created_at desc").
 		Scan(&orders).Error
-
-	println("err.Error()")
-	println(err.Error())
+	if err != nil {
+		println(err.Error())
+	}
 	return orders, err
 }
