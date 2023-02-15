@@ -45,13 +45,10 @@ func (w *Withdraw) Pay(c *gin.Context) {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
-	token, _ := c.Cookie("jwt")
 
-	value, _ := middleware.Passport().ParseTokenString(token)
+	id, err := tools.ExtractTokenID(c)
 
-	id := jwt.ExtractClaimsFromToken(value)["id"]
-
-	user, err := repository.NewUserRepo().GetByID(id.(string))
+	user, err := repository.NewUserRepo().GetByID(id)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
