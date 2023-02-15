@@ -37,6 +37,7 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 	for i, order := range orders {
 		orderStatus, accrual, err := tools.OrderProcessed(order.Number)
 
+		accrualFloat, _ := strconv.ParseFloat(accrual, 32)
 		println(strconv.ParseFloat(accrual, 32))
 		if err != nil {
 			return []domain.Order{}, err
@@ -48,7 +49,7 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 		if err != nil {
 			return []domain.Order{}, err
 		}
-		//_, err = balanceRepo.Add(userID, accrual)
+		_, err = balanceRepo.Add(userID, accrualFloat)
 		if err != nil {
 			return []domain.Order{}, err
 		}
