@@ -5,9 +5,7 @@ import (
 	"example.com/m/internal/models"
 	"example.com/m/internal/repository"
 	"example.com/m/internal/services"
-	"example.com/m/middleware"
 	"example.com/m/tools"
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"net/http"
@@ -75,13 +73,9 @@ func (w *Withdraw) Pay(c *gin.Context) {
 // @Failure  400      {object}  models.Error
 // @Router   /api/user/balance/withdrawals [get]
 func (w *Withdraw) Get(c *gin.Context) {
-	token, _ := c.Cookie("jwt")
+	id, err := tools.ExtractTokenID(c)
 
-	value, _ := middleware.Passport().ParseTokenString(token)
-
-	id := jwt.ExtractClaimsFromToken(value)["id"]
-
-	user, err := repository.NewUserRepo().GetByID(id.(string))
+	user, err := repository.NewUserRepo().GetByID(id)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
