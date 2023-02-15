@@ -10,7 +10,7 @@ import (
 type Order struct {
 	Order   string
 	Status  string
-	Accrual float64
+	Accrual float32
 }
 
 func OrderProcessed(number string) (string, string, error) {
@@ -30,9 +30,14 @@ func OrderProcessed(number string) (string, string, error) {
 
 	err = dec.Decode(&order)
 
+	println("order.Accrual")
+	println(order.Accrual)
+	println(order.Accrual)
+	println(order.Accrual)
+	println("order.Accrual")
+
 	if err != nil {
 		println(err.Error())
-
 		return "", "0", err
 	}
 
