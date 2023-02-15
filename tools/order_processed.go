@@ -22,7 +22,7 @@ func OrderProcessed(number string) (string, string, error) {
 	req, err := http.Get(url)
 	if err != nil {
 		println(err.Error())
-		return "", "", err
+		return "", "0", err
 	}
 
 	dec := json.NewDecoder(req.Body)
@@ -33,7 +33,7 @@ func OrderProcessed(number string) (string, string, error) {
 	if err != nil {
 		println(err.Error())
 
-		return "", "", err
+		return "", "0", err
 	}
 
 	defer req.Body.Close()
