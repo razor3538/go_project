@@ -49,11 +49,6 @@ func Migrate(db *gorm.DB) {
 
 	err := m.Migrate()
 
-	db.Model(&domain.Order{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
-	db.Model(&domain.Balance{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
-	db.Model(&domain.Withdrawals{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
-	db.Model(&domain.Withdrawals{}).AddForeignKey("order", "orders(number)", "CASCADE", "CASCADE")
-
 	if err == nil {
 		println("Migration did run successfully")
 	} else {
