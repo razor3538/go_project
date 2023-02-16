@@ -80,7 +80,6 @@ func (o *Order) Add(c *gin.Context) {
 		if err.Error() == "заказ уже сформирован другим пользователем" {
 			c.Status(http.StatusConflict)
 			return
-		} else {
 		}
 		tools.CreateError(http.StatusOK, err, c)
 		return
