@@ -29,11 +29,6 @@ func (os *OrderService) Add(order domain.Order) (domain.Order, error) {
 func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 	orders, err := orderRepo.GetByUser(userID)
 
-	println(len(orders))
-	println(len(orders))
-	println(len(orders))
-	println(len(orders))
-
 	if err != nil {
 		return []domain.Order{}, err
 	}
@@ -43,18 +38,18 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 
 		if err != nil {
 			println(1)
-			return []domain.Order{}, err
+			return orders, err
 		}
 
 		orders[i].Accrual = accrual
 		orders[i].Status = orderStatus
 		_, err = orderRepo.ChangeStatus(order)
 		if err != nil {
-			return []domain.Order{}, err
+			return orders, err
 		}
 		_, err = balanceRepo.Add(userID, accrual)
 		if err != nil {
-			return []domain.Order{}, err
+			return orders, err
 		}
 	}
 
