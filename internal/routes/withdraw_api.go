@@ -36,6 +36,7 @@ func (w *Withdraw) Pay(c *gin.Context) {
 	var order domain.Withdrawals
 
 	if err := tools.RequestBinderBody(&body, c); err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -46,6 +47,11 @@ func (w *Withdraw) Pay(c *gin.Context) {
 
 	id, err := tools.ExtractTokenID(c)
 
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
 	user, err := repository.NewUserRepo().GetByID(id)
 
 	if err != nil {
@@ -54,6 +60,7 @@ func (w *Withdraw) Pay(c *gin.Context) {
 	}
 
 	order.UserID = user.ID
+
 	withdrawalsModel, err := withdrawService.Pay(order)
 
 	if err != nil {
@@ -75,6 +82,11 @@ func (w *Withdraw) Pay(c *gin.Context) {
 func (w *Withdraw) Get(c *gin.Context) {
 	id, err := tools.ExtractTokenID(c)
 
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+	
 	user, err := repository.NewUserRepo().GetByID(id)
 
 	if err != nil {
