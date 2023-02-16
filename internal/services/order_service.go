@@ -37,6 +37,8 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 		orderStatus, accrual, err := tools.OrderProcessed(order.Number)
 
 		if err != nil {
+			println(1)
+			println(1)
 			return []domain.Order{}, err
 		}
 
@@ -44,10 +46,14 @@ func (os *OrderService) GetAllByUser(userID string) ([]domain.Order, error) {
 		orders[i].Status = orderStatus
 		_, err = orderRepo.ChangeStatus(order)
 		if err != nil {
+			println(12)
+
 			return []domain.Order{}, err
 		}
 		_, err = balanceRepo.Add(userID, accrual)
 		if err != nil {
+			println(123)
+
 			return []domain.Order{}, err
 		}
 	}

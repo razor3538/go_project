@@ -108,11 +108,6 @@ func (o *Order) Get(c *gin.Context) {
 	orderModel, err := orderService.GetAllByUser(id)
 
 	if err != nil {
-		println("err.Error()")
-		println(err.Error())
-		println(err.Error())
-		println("err.Error()")
-
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
