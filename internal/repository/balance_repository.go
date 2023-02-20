@@ -3,6 +3,7 @@ package repository
 import (
 	"example.com/m/config"
 	"example.com/m/domain"
+	"github.com/gofrs/uuid"
 )
 
 // BalanceRepo struct
@@ -23,4 +24,35 @@ func (br *BalanceRepo) Get(userID string) (domain.Balance, error) {
 		Scan(&balance).Error
 
 	return balance, err
+}
+
+func (br *BalanceRepo) Add(userID string, current float64) (domain.Balance, error) {
+	var balance domain.Balance
+
+	err := config.DB.
+		Unscoped().
+		Table("balances as b").
+		Where("b.user_id = ?", userID).
+		Scan(&balance).Error
+
+	if err != nil {
+		id, _ := uuid.FromString(userID)
+		balance.Current = current
+		balance.UserID = id
+		balance.Withdrawn = 0
+		if err := config.DB.
+			Create(&balance).
+			Error; err != nil {
+			return domain.Balance{}, err
+		}
+	} else {
+		balance.Current += current
+		if err := config.DB.
+			Update("current", balance.Current).
+			Error; err != nil {
+			return domain.Balance{}, err
+		}
+	}
+
+	return balance, nil
 }

@@ -1,16 +1,13 @@
-package main
+package migrate
 
 import (
-	"example.com/m/config"
 	"example.com/m/domain"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"gopkg.in/gormigrate.v1"
 )
 
-func main() {
-	db := config.DB
-
+func Migrate(db *gorm.DB) {
 	m := gormigrate.New(db, gormigrate.DefaultOptions, []*gormigrate.Migration{
 		{
 			ID: "202206311426",
@@ -51,11 +48,6 @@ func main() {
 	})
 
 	err := m.Migrate()
-
-	config.DB.Model(&domain.Order{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
-	config.DB.Model(&domain.Balance{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
-	config.DB.Model(&domain.Withdrawals{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
-	config.DB.Model(&domain.Withdrawals{}).AddForeignKey("order", "orders(number)", "CASCADE", "CASCADE")
 
 	if err == nil {
 		println("Migration did run successfully")

@@ -27,13 +27,22 @@ func (wr *WithdrawRepo) Pay(withdrawal domain.Withdrawals) (domain.Withdrawals, 
 	if withdrawal.Sum > balance.Current {
 		return domain.Withdrawals{}, errors.New("сумма для снятия не достаточна")
 	}
-	println(withdrawal.Order)
 
 	if err := config.DB.
 		Create(&withdrawal).
 		Error; err != nil {
 		return domain.Withdrawals{}, err
 	}
+
+	if err := config.DB.
+		Table("balances as b").
+		Where("b.user_id = ?", withdrawal.UserID).
+		Update("current", balance.Current-withdrawal.Sum).
+		Update("withdrawn", balance.Withdrawn+withdrawal.Sum).
+		Error; err != nil {
+		return domain.Withdrawals{}, err
+	}
+
 	return withdrawal, err
 }
 

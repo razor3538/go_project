@@ -24,13 +24,13 @@ func SetupRouter() *gin.Engine {
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	authRequired := r.Group("/")
-	authRequired.Use(middleware.Passport().MiddlewareFunc())
+	authRequired.Use(middleware.JwtAuthMiddleware())
 	{
 		authRequired.POST("/api/user/orders", order.Add)
-		authRequired.GET("/api/user/get-orders", order.Get)
+		authRequired.GET("/api/user/orders", order.Get)
 		authRequired.GET("/api/user/balance", balance.Get)
 		authRequired.POST("/api/user/balance/withdraw", withdraw.Pay)
-		authRequired.GET("/api/user/balance/withdrawals", withdraw.Get)
+		authRequired.GET("/api/user/withdrawals", withdraw.Get)
 	}
 	return r
 }

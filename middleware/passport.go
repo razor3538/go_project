@@ -12,6 +12,19 @@ import (
 	"time"
 )
 
+func JwtAuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		err := tools.TokenValid(c)
+		if err != nil {
+			println(err.Error())
+			c.String(http.StatusUnauthorized, "Unauthorized")
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
 // IdentityKeyID is used to tell
 // by what field we will identify user
 const IdentityKeyID = "id"
@@ -26,7 +39,7 @@ var userRepo = repository.NewUserRepo()
 // Passport is middleware for user authentication
 func Passport() *jwt.GinJWTMiddleware {
 	authMiddleware, _ := jwt.New(&jwt.GinJWTMiddleware{
-		Realm:          "TastyOffice",
+		Realm:          "YandexPracticum",
 		Key:            []byte(os.Getenv("JWTSECRET")),
 		Timeout:        time.Hour * 4,
 		MaxRefresh:     time.Hour * 24,

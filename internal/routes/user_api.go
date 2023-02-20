@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"errors"
 	"example.com/m/domain"
 	"example.com/m/internal/models"
 	"example.com/m/internal/services"
@@ -27,9 +26,9 @@ var userService = services.NewUserService()
 // @Produce  json
 // @Accept   json
 // @Tags     user
-// @Param    payload  body      swagger.CreateUser    false  "User"
-// @Success  201      {object}  swagger.UserResponse  false  "User"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Param    body  body      swagger.CreateUser    false  "User"
+// @Success  201      {object}  swagger.UserResponse
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/register [post]
 func (u *User) Add(c *gin.Context) {
 	var body models.CreateUserRequest
@@ -44,16 +43,23 @@ func (u *User) Add(c *gin.Context) {
 		return
 	}
 
-	if ok := tools.IsEmailValid(user.Email); !ok {
-		tools.CreateError(http.StatusBadRequest, errors.New("не валидная почта"), c)
-		return
-	}
-
 	userModel, err := userService.Add(user)
 
 	if err != nil {
+		println(err)
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
-	c.JSON(http.StatusCreated, userModel)
+
+	tokenString, err := tools.GenerateToken(userModel.ID.String())
+
+	c.Header("Authorization", tokenString)
+	
+	if err != nil {
+		println(err)
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, userModel)
 }

@@ -1,20 +1,4 @@
 definitions:
-  ErrorResponse:
-    properties:
-      code:
-        type: integer
-      error:
-        type: string
-    type: object
-  LoginRequest:
-    properties:
-      password:
-        example: "123"
-        type: string
-      username:
-        example: admin@mail.ru
-        type: string
-    type: object
   domain.Balance:
     properties:
       created-at:
@@ -38,6 +22,9 @@ definitions:
         type: string
       number:
         type: string
+      status:
+        default: REGISTERED
+        type: string
       updated-at:
         type: string
       user_id:
@@ -58,6 +45,13 @@ definitions:
       user_id:
         type: string
     type: object
+  models.Error:
+    properties:
+      code:
+        type: integer
+      error:
+        type: string
+    type: object
   swagger.CreateOrder:
     properties:
       number:
@@ -68,22 +62,14 @@ definitions:
     type: object
   swagger.CreateUser:
     properties:
-      email:
-        example: admin@mail.ru
-        type: string
-      last_name:
-        example: Gaifutdinov
-        type: string
-      name:
-        example: Eduard
+      login:
+        example: admin
         type: string
       password:
         example: "123"
         type: string
     required:
-    - email
-    - last_name
-    - name
+    - login
     - password
     type: object
   swagger.CreateWithdrawals:
@@ -97,6 +83,15 @@ definitions:
     required:
     - order
     - sum
+    type: object
+  swagger.LoginRequest:
+    properties:
+      password:
+        example: "123"
+        type: string
+      username:
+        example: admin@mail.ru
+        type: string
     type: object
   swagger.UserResponse:
     properties:
@@ -123,15 +118,15 @@ paths:
       - application/json
       responses:
         "200":
-          description: Order
+          description: OK
           schema:
             items:
               $ref: '#/definitions/domain.Balance'
             type: array
         "400":
-          description: Error
+          description: Bad Request
           schema:
-            $ref: '#/definitions/ErrorResponse'
+            $ref: '#/definitions/models.Error'
       summary: return error or 200 status code if success
       tags:
       - balance
@@ -149,13 +144,13 @@ paths:
       - application/json
       responses:
         "200":
-          description: withdraw
+          description: OK
           schema:
             $ref: '#/definitions/domain.Withdrawals'
         "400":
-          description: Error
+          description: Bad Request
           schema:
-            $ref: '#/definitions/ErrorResponse'
+            $ref: '#/definitions/models.Error'
       summary: return error or 200 status code if success
       tags:
       - withdraw
@@ -167,38 +162,18 @@ paths:
       - application/json
       responses:
         "200":
-          description: withdraw
+          description: OK
           schema:
             items:
               $ref: '#/definitions/domain.Withdrawals'
             type: array
         "400":
-          description: Error
+          description: Bad Request
           schema:
-            $ref: '#/definitions/ErrorResponse'
+            $ref: '#/definitions/models.Error'
       summary: return error or 200 status code if success
       tags:
       - withdraw
-  /api/user/get-orders:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Order
-          schema:
-            items:
-              $ref: '#/definitions/domain.Order'
-            type: array
-        "400":
-          description: Error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      summary: return error or 200 status code if success
-      tags:
-      - order
   /api/user/is-authenticated:
     get:
       consumes:
@@ -213,11 +188,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/ErrorResponse'
+            $ref: '#/definitions/models.Error'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/ErrorResponse'
+            $ref: '#/definitions/models.Error'
       summary: return user info if authorized
       tags:
       - auth
@@ -230,7 +205,7 @@ paths:
         in: body
         name: payload
         schema:
-          $ref: '#/definitions/LoginRequest'
+          $ref: '#/definitions/swagger.LoginRequest'
       produces:
       - application/json
       responses:
@@ -241,7 +216,7 @@ paths:
         "401":
           description: Error
           schema:
-            $ref: '#/definitions/ErrorResponse'
+            $ref: '#/definitions/models.Error'
       summary: Returns info about user
       tags:
       - auth
@@ -255,35 +230,54 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/ErrorResponse'
+            $ref: '#/definitions/models.Error'
         "401":
           description: Error
           schema:
-            $ref: '#/definitions/ErrorResponse'
+            $ref: '#/definitions/models.Error'
       summary: Removes cookie if set
       tags:
       - auth
   /api/user/orders:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Order'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: return error or 200 status code if success
+      tags:
+      - order
     post:
       consumes:
       - application/json
       parameters:
-      - description: Order
+      - description: order
         in: body
-        name: payload
+        name: body
         schema:
           $ref: '#/definitions/swagger.CreateOrder'
       produces:
       - application/json
       responses:
         "201":
-          description: Order
+          description: Created
           schema:
             $ref: '#/definitions/domain.Order'
         "400":
-          description: Error
+          description: Bad Request
           schema:
-            $ref: '#/definitions/ErrorResponse'
+            $ref: '#/definitions/models.Error'
       summary: return error or 201 status code if success
       tags:
       - order
@@ -294,20 +288,20 @@ paths:
       parameters:
       - description: User
         in: body
-        name: payload
+        name: body
         schema:
           $ref: '#/definitions/swagger.CreateUser'
       produces:
       - application/json
       responses:
         "201":
-          description: User
+          description: Created
           schema:
             $ref: '#/definitions/swagger.UserResponse'
         "400":
-          description: Error
+          description: Bad Request
           schema:
-            $ref: '#/definitions/ErrorResponse'
+            $ref: '#/definitions/models.Error'
       summary: return error or 201 status code if success
       tags:
       - user

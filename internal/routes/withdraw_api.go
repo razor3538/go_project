@@ -5,9 +5,7 @@ import (
 	"example.com/m/internal/models"
 	"example.com/m/internal/repository"
 	"example.com/m/internal/services"
-	"example.com/m/middleware"
 	"example.com/m/tools"
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"net/http"
@@ -30,14 +28,15 @@ var withdrawService = services.NewWithdrawService()
 // @Accept   json
 // @Tags     withdraw
 // @Param    payload  body      swagger.CreateWithdrawals    false  "Order"
-// @Success  200      {object}  domain.Withdrawals  false    "withdraw"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Success  200      {object}  domain.Withdrawals
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/balance/withdraw [post]
 func (w *Withdraw) Pay(c *gin.Context) {
 	var body models.CreateWithdrawals
 	var order domain.Withdrawals
 
 	if err := tools.RequestBinderBody(&body, c); err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
@@ -45,15 +44,23 @@ func (w *Withdraw) Pay(c *gin.Context) {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
-	token, _ := c.Cookie("jwt")
 
-	value, _ := middleware.Passport().ParseTokenString(token)
+	id, err := tools.ExtractTokenID(c)
 
-	id := jwt.ExtractClaimsFromToken(value)["id"]
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
 
-	user, err := repository.NewUserRepo().GetByID(id.(string))
+	user, err := repository.NewUserRepo().GetByID(id)
+
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
 
 	order.UserID = user.ID
+
 	withdrawalsModel, err := withdrawService.Pay(order)
 
 	if err != nil {
@@ -61,7 +68,7 @@ func (w *Withdraw) Pay(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, withdrawalsModel)
+	c.JSON(http.StatusOK, withdrawalsModel)
 }
 
 // Get return withdrawal
@@ -69,17 +76,23 @@ func (w *Withdraw) Pay(c *gin.Context) {
 // @Produce  json
 // @Accept   json
 // @Tags     withdraw
-// @Success  200      {object}  []domain.Withdrawals  false    "withdraw"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Success  200      {object}  []domain.Withdrawals
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/balance/withdrawals [get]
 func (w *Withdraw) Get(c *gin.Context) {
-	token, _ := c.Cookie("jwt")
+	id, err := tools.ExtractTokenID(c)
 
-	value, _ := middleware.Passport().ParseTokenString(token)
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+	
+	user, err := repository.NewUserRepo().GetByID(id)
 
-	id := jwt.ExtractClaimsFromToken(value)["id"]
-
-	user, err := repository.NewUserRepo().GetByID(id.(string))
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
 
 	withdrawalsModel, err := withdrawService.GetAllByUser(user.ID.String())
 
@@ -88,5 +101,5 @@ func (w *Withdraw) Get(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, withdrawalsModel)
+	c.JSON(http.StatusOK, withdrawalsModel)
 }

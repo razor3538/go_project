@@ -3,9 +3,7 @@ package routes
 import (
 	"example.com/m/internal/repository"
 	"example.com/m/internal/services"
-	"example.com/m/middleware"
 	"example.com/m/tools"
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -26,17 +24,23 @@ var balanceService = services.NewBalanceService()
 // @Produce  json
 // @Accept   json
 // @Tags     balance
-// @Success  200      {object}  []domain.Balance  false    "Order"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Success  200      {object}  []domain.Balance
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/balance [get]
 func (b *Balance) Get(c *gin.Context) {
-	token, _ := c.Cookie("jwt")
+	id, err := tools.ExtractTokenID(c)
 
-	value, _ := middleware.Passport().ParseTokenString(token)
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
 
-	id := jwt.ExtractClaimsFromToken(value)["id"]
+	user, err := repository.NewUserRepo().GetByID(id)
 
-	user, err := repository.NewUserRepo().GetByID(id.(string))
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
 
 	orderModel, err := balanceService.Get(user.ID.String())
 
@@ -45,5 +49,5 @@ func (b *Balance) Get(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, orderModel)
+	c.JSON(http.StatusOK, orderModel)
 }

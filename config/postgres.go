@@ -1,6 +1,7 @@
 package config
 
 import (
+	migrate "example.com/m/init/db"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -9,18 +10,15 @@ import (
 // DB is database instance
 var DB *gorm.DB
 
-func init() {
-	connectionString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
-		Env.DbHost, Env.DbPort, Env.DbUser, Env.DbName, Env.DbPassword,
-	)
-	println(connectionString)
-	db, err := gorm.Open("postgres", connectionString)
-
+func InitDB() {
+	db, err := gorm.Open("postgres", Env.BdConnection)
 	if err != nil {
 		panic(err)
 	}
 
 	DB = db
+
+	migrate.Migrate(db)
 
 	fmt.Println("You connected to your database.")
 }

@@ -21,7 +21,7 @@
                 "summary": "return error or 200 status code if success",
                 "responses": {
                     "200": {
-                        "description": "Order",
+                        "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -30,9 +30,9 @@
                         }
                     },
                     "400": {
-                        "description": "Error",
+                        "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
+                            "$ref": "#/definitions/models.Error"
                         }
                     }
                 }
@@ -62,15 +62,15 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "withdraw",
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/domain.Withdrawals"
                         }
                     },
                     "400": {
-                        "description": "Error",
+                        "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
+                            "$ref": "#/definitions/models.Error"
                         }
                     }
                 }
@@ -90,7 +90,7 @@
                 "summary": "return error or 200 status code if success",
                 "responses": {
                     "200": {
-                        "description": "withdraw",
+                        "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -99,40 +99,9 @@
                         }
                     },
                     "400": {
-                        "description": "Error",
+                        "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/get-orders": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "order"
-                ],
-                "summary": "return error or 200 status code if success",
-                "responses": {
-                    "200": {
-                        "description": "Order",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/domain.Order"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Error",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
+                            "$ref": "#/definitions/models.Error"
                         }
                     }
                 }
@@ -160,13 +129,13 @@
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
+                            "$ref": "#/definitions/models.Error"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
+                            "$ref": "#/definitions/models.Error"
                         }
                     }
                 }
@@ -190,7 +159,7 @@
                         "name": "payload",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/LoginRequest"
+                            "$ref": "#/definitions/swagger.LoginRequest"
                         }
                     }
                 ],
@@ -204,7 +173,7 @@
                     "401": {
                         "description": "Error",
                         "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
+                            "$ref": "#/definitions/models.Error"
                         }
                     }
                 }
@@ -226,19 +195,48 @@
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
+                            "$ref": "#/definitions/models.Error"
                         }
                     },
                     "401": {
                         "description": "Error",
                         "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
+                            "$ref": "#/definitions/models.Error"
                         }
                     }
                 }
             }
         },
         "/api/user/orders": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "return error or 200 status code if success",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Order"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            },
             "post": {
                 "consumes": [
                     "application/json"
@@ -252,8 +250,8 @@
                 "summary": "return error or 201 status code if success",
                 "parameters": [
                     {
-                        "description": "Order",
-                        "name": "payload",
+                        "description": "order",
+                        "name": "body",
                         "in": "body",
                         "schema": {
                             "$ref": "#/definitions/swagger.CreateOrder"
@@ -262,15 +260,15 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Order",
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/domain.Order"
                         }
                     },
                     "400": {
-                        "description": "Error",
+                        "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
+                            "$ref": "#/definitions/models.Error"
                         }
                     }
                 }
@@ -291,7 +289,7 @@
                 "parameters": [
                     {
                         "description": "User",
-                        "name": "payload",
+                        "name": "body",
                         "in": "body",
                         "schema": {
                             "$ref": "#/definitions/swagger.CreateUser"
@@ -300,15 +298,15 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "User",
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/swagger.UserResponse"
                         }
                     },
                     "400": {
-                        "description": "Error",
+                        "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
+                            "$ref": "#/definitions/models.Error"
                         }
                     }
                 }
@@ -316,30 +314,6 @@
         }
     },
     "definitions": {
-        "ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "error": {
-                    "type": "string"
-                }
-            }
-        },
-        "LoginRequest": {
-            "type": "object",
-            "properties": {
-                "password": {
-                    "type": "string",
-                    "example": "123"
-                },
-                "username": {
-                    "type": "string",
-                    "example": "admin@mail.ru"
-                }
-            }
-        },
         "domain.Balance": {
             "type": "object",
             "properties": {
@@ -375,6 +349,10 @@
                 "number": {
                     "type": "string"
                 },
+                "status": {
+                    "type": "string",
+                    "default": "REGISTERED"
+                },
                 "updated-at": {
                     "type": "string"
                 },
@@ -406,6 +384,17 @@
                 }
             }
         },
+        "models.Error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
         "swagger.CreateOrder": {
             "type": "object",
             "required": [
@@ -421,23 +410,13 @@
         "swagger.CreateUser": {
             "type": "object",
             "required": [
-                "email",
-                "last_name",
-                "name",
+                "login",
                 "password"
             ],
             "properties": {
-                "email": {
+                "login": {
                     "type": "string",
-                    "example": "admin@mail.ru"
-                },
-                "last_name": {
-                    "type": "string",
-                    "example": "Gaifutdinov"
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Eduard"
+                    "example": "admin"
                 },
                 "password": {
                     "type": "string",
@@ -459,6 +438,19 @@
                 "sum": {
                     "type": "number",
                     "example": 500
+                }
+            }
+        },
+        "swagger.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "123"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "admin@mail.ru"
                 }
             }
         },

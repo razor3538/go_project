@@ -1,16 +1,15 @@
 package routes
 
 import (
+	"errors"
 	"example.com/m/domain"
-	"example.com/m/internal/models"
 	"example.com/m/internal/repository"
 	"example.com/m/internal/services"
-	"example.com/m/middleware"
 	"example.com/m/tools"
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/copier"
+	"io"
 	"net/http"
+	"strconv"
 )
 
 // Order struct
@@ -29,53 +28,64 @@ var orderService = services.NewOrderService()
 // @Produce  json
 // @Accept   json
 // @Tags     order
-// @Param    payload  body      swagger.CreateOrder    false  "Order"
-// @Success  201      {object}  domain.Order  false    "Order"
-// @Failure  400      {object}  swagger.Error          "Error"
+// @Param body body swagger.CreateOrder false "order"
+// @Success  201      {object}  domain.Order
+// @Failure  400      {object}  models.Error
 // @Router   /api/user/orders [post]
 func (o *Order) Add(c *gin.Context) {
-	var body models.CreateOrderRequest
 	var order domain.Order
+	var reader = c.Request.Body
 
-	if err := tools.RequestBinderBody(&body, c); err != nil {
-		return
-	}
-
-	if err := copier.Copy(&order, &body); err != nil {
+	b, err := io.ReadAll(reader)
+	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
-	token, _ := c.Cookie("jwt")
+	body := string(b)
 
-	value, _ := middleware.Passport().ParseTokenString(token)
+	id, err := tools.ExtractTokenID(c)
 
-	id := jwt.ExtractClaimsFromToken(value)["id"]
+	if err != nil {
+		tools.CreateError(http.StatusUnauthorized, err, c)
+		return
+	}
 
-	user, err := repository.NewUserRepo().GetByID(id.(string))
-
-	order.UserID = user.ID
-
-	//number, err := strconv.Atoi(order.Number)
-	//if err != nil {
-	//	tools.CreateError(http.StatusBadRequest, errors.New("неверный формат запроса"), c)
-	//	return
-	//}
-
-	//ok := tools.Valid(number)
-	//if !ok {
-	//	tools.CreateError(422, errors.New("неверный формат номера заказа"), c)
-	//	return
-	//}
-
-	orderModel, err := orderService.Add(order)
+	user, err := repository.NewUserRepo().GetByID(id)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
-	c.JSON(http.StatusCreated, orderModel)
+	order.Number = body
+	order.UserID = user.ID
+	order.Status = "NEW"
+
+	number, err := strconv.Atoi(order.Number)
+	if err != nil {
+		tools.CreateError(http.StatusBadRequest, errors.New("неверный формат запроса"), c)
+		return
+	}
+
+	ok := tools.Valid(number)
+	if !ok {
+		tools.CreateError(422, errors.New("неверный формат номера заказа"), c)
+		return
+	}
+
+	orderModel, err := orderService.Add(order)
+
+	if err != nil {
+		if err.Error() == "заказ уже сформирован другим пользователем" {
+			c.Status(http.StatusConflict)
+			return
+		}
+		tools.CreateError(http.StatusOK, err, c)
+		return
+	}
+
+	c.JSON(http.StatusAccepted, orderModel)
 }
 
 // Get return orders
@@ -83,24 +93,23 @@ func (o *Order) Add(c *gin.Context) {
 // @Produce  json
 // @Accept   json
 // @Tags     order
-// @Success  200      {object}  []domain.Order  false    "Order"
-// @Failure  400      {object}  swagger.Error          "Error"
-// @Router   /api/user/get-orders [get]
+// @Success  200      {object}  []domain.Order
+// @Failure  400      {object}  models.Error
+// @Router   /api/user/orders [get]
 func (o *Order) Get(c *gin.Context) {
-	token, _ := c.Cookie("jwt")
-
-	value, _ := middleware.Passport().ParseTokenString(token)
-
-	id := jwt.ExtractClaimsFromToken(value)["id"]
-
-	user, err := repository.NewUserRepo().GetByID(id.(string))
-
-	orderModel, err := orderService.GetAllByUser(user.ID.String())
+	id, err := tools.ExtractTokenID(c)
 
 	if err != nil {
 		tools.CreateError(http.StatusBadRequest, err, c)
 		return
 	}
 
-	c.JSON(http.StatusCreated, orderModel)
+	orderModel, err := orderService.GetAllByUser(id)
+
+	if err != nil && len(orderModel) == 0 {
+		tools.CreateError(http.StatusBadRequest, err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, orderModel)
 }
